@@ -31,15 +31,33 @@
           Telefone Para Contato:
           <a href="tel:47 98825-5153">47 98825-5153</a>
         </p>
-        <form class="contact-form" @submit.prevent="sendEmail">
-          <label>Name</label>
-          <input type="text" name="user_name" />
-          <label>Email</label>
-          <input type="email" name="user_email" />
-          <label>Message</label>
-          <textarea name="message"></textarea>
-          <input type="submit" value="Send" />
-        </form>
+      </b-col>
+      <b-col cols="12" sm="12" md="12" lg="12">
+        <section class="d-flex justify-content-center">
+          <div>
+            <h3
+              class="h3 text-success text-capitalize lead m-3"
+            >Quer saber mais? entre em contato mandando email</h3>
+            <b-form-input v-model="nome" placeholder="Informe seu nome" class="m-3"></b-form-input>
+            <b-form-input v-model="email" type="email" placeholder="Informe seu Email" class="m-3"></b-form-input>
+            <b-form-textarea
+              id="textarea"
+              class="m-3"
+              v-model="mensagem"
+              placeholder="Informe a mensagem..."
+              rows="3"
+              max-rows="6"
+            ></b-form-textarea>
+            <div>
+              <b-button
+                class="m-3"
+                variant="outline-success"
+                @click.prevent="handleEnviarEmail"
+                :disabled="contatoIsValido"
+              >Entrar em Contato</b-button>
+            </div>
+          </div>
+        </section>
       </b-col>
     </b-row>
   </b-container>
@@ -47,33 +65,67 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import emailjs from "emailjs";
+import emailjs from "emailjs-com";
+
 export default {
   name: "Index",
+  data() {
+    return {
+      nome: "",
+      email: "",
+      mensagem: ""
+    };
+  },
   computed: {
     anoAtual() {
       return new Date().getFullYear();
     },
+    contatoIsValido() {
+      return this.nome.length < 4 ||
+        this.email.length < 4 ||
+        this.mensagem.length < 4
+        ? true
+        : false;
+    },
     ...mapState(["empresasRepresentadas"])
   },
+
   methods: {
     ...mapActions(["getEmpresasRepresentadas"]),
-    sendEmail(e) {
-      emailjs
-        .sendForm(
-          "2a5c752534b7a21fdd1134ac3e5f5e62",
-          "template_L2H5EVut",
-          e.target,
-          "user_kQatHorOJHaJ1DyEJkUuv"
-        )
-        .then(
-          result => {
-            console.log("SUCCESS!", result);
-          },
-          error => {
-            console.log("FAILED...", error);
-          }
-        );
+    handleEnviarEmail() {
+      if (!this.contatoIsValido) {
+        let templateParams = {
+          from_name: this.nome,
+          email_owner: this.email,
+          message_html: this.mensagem
+        };
+        emailjs
+          .send(
+            "default_service",
+            "template_L2H5EVut",
+            templateParams,
+            "user_kQatHorOJHaJ1DyEJkUuv"
+          )
+          .then(() => {
+            this.$bvModal
+              .msgBoxOk("Email Enviado Com Sucesso", {
+                title: "Aviso",
+                size: "sm",
+                buttonSize: "sm",
+                okVariant: "success",
+                headerClass: "p-2 border-bottom-0",
+                footerClass: "p-2 border-top-0",
+                centered: true
+              })
+              .then(() => {
+                this.limparCampos();
+              });
+          })
+          .catch(err => console.log("err" + err));
+      }
+    },
+    limparCampos() {
+      (this.nome = ""), (this.email = ""), (this.mensagem = "");
     }
   },
   created() {
