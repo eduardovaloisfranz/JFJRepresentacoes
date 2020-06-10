@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import emailjs from "emailjs-com";
 
 export default {
@@ -91,7 +91,6 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getEmpresasRepresentadas"]),
     handleEnviarEmail() {
       if (!this.contatoIsValido) {
         let templateParams = {
@@ -127,9 +126,6 @@ export default {
     limparCampos() {
       (this.nome = ""), (this.email = ""), (this.mensagem = "");
     }
-  },
-  created() {
-    this.getEmpresasRepresentadas();
   }
 };
 </script>

@@ -11,6 +11,12 @@ export default new Vuex.Store({
     SETAR_EMPRESAS_REPRESENTADAS(state, payload) {
       state.empresasRepresentadas = payload;
     },
+    APAGAR_EMPRESA_REPRESENTADA(state, payload) {
+      state.empresasRepresentadas.splice(payload.idx, 1);
+    },
+    EDITAR_EMPRESA_REPRESENTADA(state, payload) {
+      Vue.set(state.empresasRepresentadas, payload.idx, payload.obj);
+    },
   },
   actions: {
     getEmpresasRepresentadas(context) {
@@ -21,6 +27,32 @@ export default new Vuex.Store({
         })
         .catch((err) =>
           console.log("Erro ao tentar setar as empresas: " + err)
+        );
+    },
+    async apagarEmpresaRepresentada(context, payload) {
+      let idx = context.state.empresasRepresentadas.findIndex(
+        (el) => el.id === payload.obj.id
+      );
+      payload.idx = idx;
+      await api
+        .delete(`empresas/${payload.obj.id}`)
+        .then(() => {
+          this.commit("APAGAR_EMPRESA_REPRESENTADA", payload);
+        })
+        .catch((err) => console.log("Erro ao apagar" + err));
+    },
+    async editarEmpresaRepresentada(context, payload) {
+      let idx = context.state.empresasRepresentadas.findIndex(
+        (el) => el.id === payload.obj.id
+      );
+      payload.idx = idx;
+      await api
+        .put(`empresas/${payload.obj.id}`, payload.obj)
+        .then(() => {
+          context.commit("EDITAR_EMPRESA_REPRESENTADA", payload);
+        })
+        .catch((res) =>
+          console.log("Erro ao tentar modificar a empresa" + res)
         );
     },
   },
