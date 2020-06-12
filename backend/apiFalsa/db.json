@@ -8,13 +8,6 @@
       "urlSite": "https://www.blufitas.com.br/"
     },
     {
-      "id": 2,
-      "nome": "BluFitas",
-      "urlImagem": "https://www.blufitas.com.br/wp-content/uploads/sites/462/2019/08/logo_blufitas.png",
-      "descricao": " A Blufitas é uma empresa especializada em produtos para fechamento de embalagens. As fitas personalizadas tornam a embalagem mais protegida contra violação.",
-      "urlSite": "https://www.blufitas.com.br/"
-    },
-    {
       "id": 3,
       "nome": "BluFitas",
       "urlImagem": "https://www.blufitas.com.br/wp-content/uploads/sites/462/2019/08/logo_blufitas.png",
@@ -41,6 +34,13 @@
       "urlImagem": "https://www.blufitas.com.br/wp-content/uploads/sites/462/2019/08/logo_blufitas.png",
       "descricao": " A Blufitas é uma empresa especializada em produtos para fechamento de embalagens. As fitas personalizadas tornam a embalagem mais protegida contra violação.",
       "urlSite": "https://www.blufitas.com.br/"
+    },
+    {
+      "nome": "Nova empresa a ser representada",
+      "urlImagem": "https://i.pinimg.com/originals/8d/aa/2d/8daa2d22c2a57235c343dafdeb7add08.jpg",
+      "descricao": "Empresa que faz alguma coisa",
+      "urlSite": "https://www.google.com",
+      "id": 7
     }
   ]
 }

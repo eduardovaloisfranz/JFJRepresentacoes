@@ -17,6 +17,9 @@ export default new Vuex.Store({
     EDITAR_EMPRESA_REPRESENTADA(state, payload) {
       Vue.set(state.empresasRepresentadas, payload.idx, payload.obj);
     },
+    CADASTRAR_EMPRESA_REPRESENTADA(state, payload) {
+      state.empresasRepresentadas.push(payload);
+    },
   },
   actions: {
     getEmpresasRepresentadas(context) {
@@ -54,6 +57,14 @@ export default new Vuex.Store({
         .catch((res) =>
           console.log("Erro ao tentar modificar a empresa" + res)
         );
+    },
+    async addEmpresaRepresentada(context, payload) {
+      await api
+        .post("empresas", payload)
+        .then((res) => {
+          context.commit("CADASTRAR_EMPRESA_REPRESENTADA", res.data);
+        })
+        .catch((err) => console.log("Erro ao tentar adicionar Empresa" + err));
     },
   },
 });
