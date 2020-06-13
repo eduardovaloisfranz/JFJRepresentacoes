@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace JFJRepresentacoes.Models
+﻿namespace JFJRepresentacoes.Models
 {
     public class Representacao
     {
@@ -14,7 +9,7 @@ namespace JFJRepresentacoes.Models
         public string UrlImagem { get; set; }
 
         public string Descricao { get; set; }
-
+        
         public string UrlSite { get; set; }
     }
 }

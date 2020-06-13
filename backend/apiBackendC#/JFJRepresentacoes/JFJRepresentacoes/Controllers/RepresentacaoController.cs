@@ -3,19 +3,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using JFJRepresentacoes.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JFJRepresentacoes.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController]    
     public class RepresentacaoController : ControllerBase
     {
         private readonly RepresentacaoContexto _context;
         public RepresentacaoController(RepresentacaoContexto ctx)
         {
             this._context = ctx;
+        }
+        [HttpPost("login")]
+        public ActionResult login(Usuario user)
+        {
+            user.Senha = Settings.HashPassword(user.Senha);
+            Usuario usuario = _context.usuarios.Where(el => el.Email.Equals(user.Email) && el.Senha.Equals(user.Senha)).FirstOrDefault();
+            if(usuario == null)
+            {
+                return BadRequest("Usuario não encontrado");
+            }else
+            {
+                string token = TokenService.generateToken(usuario);
+                return Ok(token);
+            }
+        }  
+        [HttpGet("loginTeste")]
+        public Usuario loginTeste()
+        {
+            Usuario user = new Usuario()
+            {
+                nome = "Eduardo Valois Franz",
+                Email = "dudufranz13@gmail.com",
+                Senha = Settings.HashPassword("teste12345"),
+                autorizacao = "jfjadmin"                            
+            };
+            _context.usuarios.Add(user);
+            _context.SaveChanges();
+            return user;
         }
 
         // GET: api/Representacao
@@ -44,6 +74,8 @@ namespace JFJRepresentacoes.Controllers
 
         // POST: api/Representacao
         [HttpPost]
+        //[Authorize(Roles = "jfjadmin")]
+        [Authorize]
         public ActionResult Post([FromBody] Representacao representacao)
         {
             if (ModelState.IsValid)
@@ -60,6 +92,7 @@ namespace JFJRepresentacoes.Controllers
 
         // PUT: api/Representacao/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "jfjadmin")]
         public ActionResult Put(int id, [FromBody] Representacao representacao)
         {
             Representacao oldRep = _context.representacoes.Find(id);
@@ -80,6 +113,7 @@ namespace JFJRepresentacoes.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "jfjadmin")]
         public ActionResult Delete(int id)
         {
             Representacao oldRep = _context.representacoes.Find(id);

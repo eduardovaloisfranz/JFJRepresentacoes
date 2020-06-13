@@ -14,6 +14,8 @@ namespace JFJRepresentacoes.Models
         }
 
         public DbSet<Representacao> representacoes { get; set; }
+
+        public DbSet<Usuario> usuarios { get; set; }
     }
 
 }

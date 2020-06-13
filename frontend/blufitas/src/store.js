@@ -24,7 +24,7 @@ export default new Vuex.Store({
   actions: {
     getEmpresasRepresentadas(context) {
       api
-        .get("empresas")
+        .get("api/Representacao")
         .then((r) => {
           context.commit("SETAR_EMPRESAS_REPRESENTADAS", r.data);
         })
@@ -38,7 +38,7 @@ export default new Vuex.Store({
       );
       payload.idx = idx;
       await api
-        .delete(`empresas/${payload.obj.id}`)
+        .delete(`api/Representacao/${payload.obj.id}`)
         .then(() => {
           this.commit("APAGAR_EMPRESA_REPRESENTADA", payload);
         })
@@ -50,7 +50,7 @@ export default new Vuex.Store({
       );
       payload.idx = idx;
       await api
-        .put(`empresas/${payload.obj.id}`, payload.obj)
+        .put(`api/Representacao/${payload.obj.id}`, payload.obj)
         .then(() => {
           context.commit("EDITAR_EMPRESA_REPRESENTADA", payload);
         })
@@ -60,7 +60,7 @@ export default new Vuex.Store({
     },
     async addEmpresaRepresentada(context, payload) {
       await api
-        .post("empresas", payload)
+        .post("api/Representacao", payload)
         .then((res) => {
           context.commit("CADASTRAR_EMPRESA_REPRESENTADA", res.data);
         })

@@ -113,4 +113,11 @@ C:\Users\duduf\Documents\GitHub\blufitas\backend\apiBackendC#\JFJRepresentacoes\
 C:\Users\duduf\Documents\GitHub\blufitas\backend\apiBackendC#\JFJRepresentacoes\JFJRepresentacoes\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Primitives.dll
 C:\Users\duduf\Documents\GitHub\blufitas\backend\apiBackendC#\JFJRepresentacoes\JFJRepresentacoes\bin\Debug\netcoreapp3.1\System.Collections.Immutable.dll
 C:\Users\duduf\Documents\GitHub\blufitas\backend\apiBackendC#\JFJRepresentacoes\JFJRepresentacoes\bin\Debug\netcoreapp3.1\System.Diagnostics.DiagnosticSource.dll
+C:\Users\duduf\Documents\GitHub\blufitas\backend\apiBackendC#\JFJRepresentacoes\JFJRepresentacoes\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\duduf\Documents\GitHub\blufitas\backend\apiBackendC#\JFJRepresentacoes\JFJRepresentacoes\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\duduf\Documents\GitHub\blufitas\backend\apiBackendC#\JFJRepresentacoes\JFJRepresentacoes\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Logging.dll
+C:\Users\duduf\Documents\GitHub\blufitas\backend\apiBackendC#\JFJRepresentacoes\JFJRepresentacoes\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.dll
+C:\Users\duduf\Documents\GitHub\blufitas\backend\apiBackendC#\JFJRepresentacoes\JFJRepresentacoes\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\duduf\Documents\GitHub\blufitas\backend\apiBackendC#\JFJRepresentacoes\JFJRepresentacoes\bin\Debug\netcoreapp3.1\Microsoft.IdentityModel.Tokens.dll
+C:\Users\duduf\Documents\GitHub\blufitas\backend\apiBackendC#\JFJRepresentacoes\JFJRepresentacoes\bin\Debug\netcoreapp3.1\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\duduf\Documents\GitHub\blufitas\backend\apiBackendC#\JFJRepresentacoes\JFJRepresentacoes\obj\Debug\netcoreapp3.1\JFJRepresentacoes.MvcApplicationPartsAssemblyInfo.cache
