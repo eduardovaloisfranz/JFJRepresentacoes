@@ -43,7 +43,7 @@ namespace JFJRepresentacoes
             var subject = Assunto;
             var to = new EmailAddress(Destinatario, "");
             var plainTextContent = CorpoEmail;
-            var htmlContent = "<strong>Um Email enviado por JFJ Representações</strong>";
+            var htmlContent = $"<p>{CorpoEmail}</p>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
         }

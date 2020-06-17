@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using JFJRepresentacoes.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JFJRepresentacoes.Controllers
@@ -95,10 +92,23 @@ namespace JFJRepresentacoes.Controllers
             }
         }
         [HttpPost("recuperarSenha")]
-        public ActionResult changePassword(string email)
-        {
-            Settings.SendEmail("dudufranz13@gmail.com", "Este é o corpo do email!", "Titulo do Emails");
-            return NoContent();
+        public ActionResult changePassword([FromBody] Usuario user){
+            Usuario selectedUser = _context.usuarios.Where(el => el.Email.Equals(user.Email)).FirstOrDefault();
+            if(selectedUser == null)
+            {
+                return BadRequest("Problema ao encontrar o usuario");
+            }
+            try
+            {
+                string token = TokenService.recoveryPasswordToken(user.Email);
+                string corpoEmail = "Informe esse código para recuperar sua senha: <strong>" + token + "</strong> Entretantoo esse token possui validade de apenas 30 minutos";
+                Settings.SendEmail(user.Email, corpoEmail, "Recuperação de Conta");                
+                return NoContent();
+
+            }catch(Exception ex)
+            {
+                return BadRequest("Erro de Programação");
+            }
         }
     }
 }

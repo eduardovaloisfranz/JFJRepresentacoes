@@ -31,9 +31,11 @@ namespace JFJRepresentacoes
             {
                 options.UseMySql(connection);
             });
-            services.AddControllers();
+            services.AddControllers();            
             services.AddCors();
             
+
+
             var key = Encoding.ASCII.GetBytes(Settings.Secret);
             services.AddAuthentication(x =>
             {
