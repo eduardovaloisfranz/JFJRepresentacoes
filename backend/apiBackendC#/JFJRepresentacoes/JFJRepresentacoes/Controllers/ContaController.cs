@@ -34,21 +34,7 @@ namespace JFJRepresentacoes.Controllers
                 string token = TokenService.generateToken(usuario);
                 return Ok(token);
             }
-        }
-        [HttpGet("loginTeste")]        
-        public Usuario loginTeste()
-        {
-            Usuario user = new Usuario()
-            {
-                nome = "Eduardo Valois Franz",
-                Email = "dudufranz13@gmail.com",
-                Senha = Settings.HashPassword("teste12345"),
-                autorizacao = "jfjadmin"
-            };
-            _context.usuarios.Add(user);
-            _context.SaveChanges();
-            return user;
-        }      
+        }        
            
         // PUT: api/Conta/5
         [HttpPut("{id}")]
@@ -134,7 +120,10 @@ namespace JFJRepresentacoes.Controllers
             }
             else
             {
-            return Ok("Mudando a senha");
+                Usuario user = _context.usuarios.Where(user => user.Email.Equals(email)).FirstOrDefault();
+                user.Senha = Settings.HashPassword("senhamodificada");
+                _context.SaveChanges();
+                return NoContent();
             }
 
         }
