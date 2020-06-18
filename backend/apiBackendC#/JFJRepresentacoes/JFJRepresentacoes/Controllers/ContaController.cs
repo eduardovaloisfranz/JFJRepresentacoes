@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text.Json;
 using JFJRepresentacoes.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace JFJRepresentacoes.Controllers
 {
@@ -109,6 +114,29 @@ namespace JFJRepresentacoes.Controllers
             {
                 return BadRequest("Erro de Programação");
             }
+        }
+
+        [HttpPost("token")]
+        public ActionResult changePassword([FromBody] TokenPassword token)
+        {
+            var stream = token.token;
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(stream);
+            var tokenS = handler.ReadToken(stream) as JwtSecurityToken;
+
+            var email = tokenS.Claims.First(claim => claim.Type == "email").Value;
+            var exp = tokenS.Claims.First(claim => claim.Type == "exp").Value;
+            DateTime expirationTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            expirationTime = expirationTime.AddSeconds(Convert.ToDouble(exp)).ToUniversalTime();
+            if(DateTime.UtcNow > expirationTime)
+            {
+                return BadRequest("Token expirado");
+            }
+            else
+            {
+            return Ok("Mudando a senha");
+            }
+
         }
     }
 }

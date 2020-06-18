@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace JFJRepresentacoes
 {
     public class TokenService
-    {
+    {       
         public static string generateToken(Usuario user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
