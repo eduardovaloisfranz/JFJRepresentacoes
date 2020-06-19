@@ -34,14 +34,13 @@ namespace JFJRepresentacoes.Controllers
                 string token = TokenService.generateToken(usuario);
                 return Ok(token);
             }
-        }        
-           
-        // PUT: api/Conta/5
-        [HttpPut("{id}")]
+        }
+        
+        [HttpPut()]
         [Authorize(Roles = "jfjadmin")]
-        public ActionResult Put (int id, [FromBody] Usuario user)
+        public ActionResult Put([FromBody] Usuario user)
         {
-            Usuario oldUser = _context.usuarios.Find(id);
+            Usuario oldUser = _context.usuarios.Where(el => el.Email.Equals(user.Email)).FirstOrDefault();
             if(oldUser == null)
             {
                 return NotFound("Usuário não encontrado");
@@ -50,7 +49,6 @@ namespace JFJRepresentacoes.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
                     oldUser.nome = user.nome;
                     oldUser.Email = user.Email;
                     oldUser.Senha = Settings.HashPassword(user.Senha);

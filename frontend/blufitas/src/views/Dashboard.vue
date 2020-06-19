@@ -7,7 +7,11 @@
           <p
             class="p lead text-success text-center"
           >Bem vindo Jaime Franz, segue a lista de suas Representações</p>
-          <div class="d-flex justify-content-end">
+          <div class="d-flex justify-content-between">
+            <b-button
+              variant="info"
+              @click.prevent="exibirModalEditUser = true"
+            >Alterar suas informações</b-button>
             <b-button
               variant="success"
               @click.prevent="exibirModalCadastroRepresentacao = true"
@@ -258,6 +262,45 @@
           >Adicionar Representação</b-button>
         </div>
       </b-modal>
+      <b-modal v-model="exibirModalEditUser" centered title="Alterar suas informações" hide-footer>
+        <section>
+          <label for="input-nomeEmpresa">Informe Seu novo Nome:</label>
+          <b-form-input
+            id="input-novoNome"
+            v-model="user.nome"
+            :state="nomeUserIsValido"
+            type="text"
+            aria-describedby="input-live-help input-live-feedback"
+            placeholder="Informe o seu novo Nome"
+          ></b-form-input>
+
+          <label for="input-email">Informe Seu novo Email:</label>
+          <b-form-input
+            id="input-novoEmail"
+            v-model="user.email"
+            :state="emailIsValido"
+            type="email"
+            aria-describedby="input-live-help input-live-feedback"
+            placeholder="Informe o seu novo Email"
+          ></b-form-input>
+          <label for="input-email">Informe Sua nova Senha:</label>
+          <b-form-input
+            id="input-novaSenha"
+            v-model="user.senha"
+            type="password"
+            :state="senhaIsValida"
+            aria-describedby="input-live-help input-live-feedback"
+            placeholder="Informe sua nova Senha"
+          ></b-form-input>
+          <div class="d-flex justify-content-center mt-3">
+            <b-button
+              variant="success"
+              :disabled="usuarioIsValido"
+              @click.prevent="handleAlterarInformacoes"
+            >Alterar Informações</b-button>
+          </div>
+        </section>
+      </b-modal>
     </b-container>
     <b-container v-else>
       <h1
@@ -269,6 +312,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+import axios from "axios";
 export default {
   name: "Dashboard",
   data() {
@@ -292,7 +336,13 @@ export default {
       filtro: null,
       porPagina: 5,
       pageOptions: [5, 10, 15],
-      paginaAtual: 1
+      paginaAtual: 1,
+      exibirModalEditUser: false,
+      user: {
+        nome: "",
+        email: "",
+        senha: ""
+      }
     };
   },
   methods: {
@@ -423,6 +473,51 @@ export default {
         this.addEmpresaRepresentada(this.novaEmpresa);
       }
       this.exibirModalCadastroRepresentacao = false;
+    },
+    async handleAlterarInformacoes() {
+      console.log(this.user);
+      let res = "";
+      await this.$bvModal
+        .msgBoxConfirm(
+          "Você realmente deseja modificar suas informações?",
+          this.estiloConfirm("Confirmação", "warning")
+        )
+        .then(r => (res = r));
+      if (!res) {
+        this.$bvModal
+          .msgBoxOk(
+            "Registro mantido",
+            this.estiloMsgBox("Registro Não modificado", "success")
+          )
+          .then(() => {
+            this.exibirModalEditUser = false;
+          });
+      } else {
+        let config = {
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token")
+          }
+        };
+        console.log(config);
+        axios
+          .put("https://localhost:44348/api/conta", this.user, config)
+          .then(() => {
+            this.$bvModal.msgBoxOk(
+              "Registro Alterado com sucesso",
+              this.estiloMsgBox("Registro Modificado", "success")
+            );
+          })
+          .catch(() => {
+            this.$bvModal.msgBoxOk(
+              "Erro ao alterar as suas informações, por favor tente mais tarde",
+              this.estiloMsgBox(
+                "Houve um problema ao alterar o registro",
+                "danger"
+              )
+            );
+          });
+        //this.exibirModalEditUser = false;
+      }
     }
   },
   computed: {
@@ -527,6 +622,38 @@ export default {
         return true;
       }
     },
+    emailIsValido() {
+      if (this.user.email != undefined) {
+        return this.user.email.includes("@") && this.user.email.includes(".com")
+          ? true
+          : false;
+      }
+      return false;
+    },
+    senhaIsValida() {
+      if (this.user.senha != undefined) {
+        return this.user.senha.length > 3 ? true : false;
+      } else {
+        return false;
+      }
+    },
+    nomeUserIsValido() {
+      if (this.user.nome != undefined) {
+        return this.user.nome.length > 3 && this.user.nome.length < 20
+          ? true
+          : false;
+      } else {
+        return false;
+      }
+    },
+    usuarioIsValido() {
+      if (this.emailIsValido && this.senhaIsValida && this.nomeUserIsValido) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+
     ...mapState(["empresasRepresentadas"])
   },
   beforeRouteEnter(to, from, next) {
@@ -543,6 +670,3 @@ export default {
   }
 };
 </script>
-
-<style>
-</style>

@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <b-row class="pt-3 justify-content-center align-items-center">
+    <b-row class="pt-3 d-flex justify-content-center align-items-center">
       <b-col cols="12" sm="8" md="4" lg="4">
         <h2 class="h2 text-center text-monospace">Por favor, faça login</h2>
         <b-form>
