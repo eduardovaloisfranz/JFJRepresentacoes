@@ -22,18 +22,67 @@
               placeholder="Informe sua senha"
             ></b-form-input>
           </b-form-group>
-          <div class="d-flex justify-content-between">
-            <b-button variant="success" @click.prevent="efetuarLogin" type="submit">Login</b-button>
-            <b-button variant="danger" @click.prevent="handleEsquecimentoSenha">Esqueci minha Senha</b-button>
+          <p
+            class="p text-capitalize text-monospace text-danger text-right"
+            @click.prevent="handleEsquecimentoSenha"
+          >Esqueci minha Senha</p>
+          <div class="d-flex justify-content-center">
+            <b-button
+              variant="success"
+              @click.prevent="efetuarLogin"
+              :disabled="!loginIsValido"
+              type="submit"
+            >Login</b-button>
           </div>
         </b-form>
       </b-col>
     </b-row>
+    <b-modal v-model="modalRecuperacaoSenha" title="Recuperação de Senha" hide-footer centered>
+      <section v-if="tokenRecoveryPassword === null">
+        <b-form-group>
+          <p
+            class="p text-center text-info"
+          >Informe seu email para receber um código de acesso no seu email cadastrado</p>
+          <b-form-input
+            id="input-1"
+            v-model="emailRecuperacaoSenha"
+            type="email"
+            required
+            placeholder="Informe o email"
+          ></b-form-input>
+        </b-form-group>
+        <div class="d-flex justify-content-center">
+          <b-button variant="success" @click="handleRecoveryPassword">Enviar Email!</b-button>
+        </div>
+      </section>
+      <section v-else>
+        <b-form-group>
+          <p
+            class="p text-center text-info"
+          >Informe o token informado no seu email para continuarmos com a recuperacao de senha</p>
+          <b-form-input
+            id="input-1"
+            v-model="tokenRecoveryPassword"
+            type="text"
+            required
+            placeholder="Informe o Token"
+          ></b-form-input>
+        </b-form-group>
+        <h4
+          class="h4 text-center text-warning"
+          v-if="senhaModificada === true"
+        >Aviso: Sua senha sera alterada para: {{novaSenha}}</h4>
+        <div class="d-flex justify-content-center">
+          <b-button variant="success" @click.prevent="handleToken">Mudar a senha</b-button>
+        </div>
+      </section>
+    </b-modal>
   </b-container>
 </template>
 
 <script>
 import axios from "axios";
+import jwt from "jwt-decode";
 export default {
   name: "Login",
   data() {
@@ -42,7 +91,11 @@ export default {
         email: "",
         senha: ""
       },
-      modalRecuperacaoSenha: false
+      tokenRecoveryPassword: null,
+      emailRecuperacaoSenha: "",
+      modalRecuperacaoSenha: false,
+      senhaModificada: false,
+      novaSenha: ""
     };
   },
   methods: {
@@ -54,10 +107,60 @@ export default {
           sessionStorage.setItem("token", res.data);
           this.$router.push({ path: "dash" });
         })
-        .catch(err => console.log("Erro ao efetuar o login" + err));
+        .catch(() => {
+          alert("Falha ao efetuar o login, cheque os dados e tente novamente");
+        });
     },
     handleEsquecimentoSenha() {
-      console.log("??");
+      this.modalRecuperacaoSenha = true;
+    },
+    handleRecoveryPassword() {
+      const URLTOFETCH = "https://localhost:44348/api/conta/recuperarSenha";
+      let obj = { email: this.emailRecuperacaoSenha };
+      axios
+        .post(URLTOFETCH, obj)
+        .then(() => {
+          this.tokenRecoveryPassword = "";
+        })
+        .catch(err =>
+          alert(
+            "Erro ao tentar recuperar a senha, verifique os dados e tente novamente: " +
+              err
+          )
+        );
+    },
+    handleToken() {
+      const URLTOFETCH = "https://localhost:44348/api/conta/token";
+      let obj = { token: this.tokenRecoveryPassword };
+      let tokenDecoded = jwt(obj.token);
+      if (
+        tokenDecoded.exp < new Date().getTime() + 1 / 1000 &&
+        tokenDecoded.email !== this.emailRecuperacaoSenha
+      ) {
+        alert("Token expirado, por favor escolha outro");
+      } else {
+        axios
+          .post(URLTOFETCH, obj)
+          .then(res => {
+            this.novaSenha = res.data;
+            this.senhaModificada = true;
+          })
+          .catch(err =>
+            alert(
+              "Erro ao tentar recuperar a senha, verifique os dados e tente novamente: " +
+                err
+            )
+          );
+      }
+    }
+  },
+  computed: {
+    loginIsValido() {
+      return (this.user.email.includes("@") &&
+        this.user.email.includes(".com")) ||
+        this.user.senha.length > 3
+        ? true
+        : false;
     }
   }
 };

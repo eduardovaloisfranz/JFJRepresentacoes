@@ -121,9 +121,10 @@ namespace JFJRepresentacoes.Controllers
             else
             {
                 Usuario user = _context.usuarios.Where(user => user.Email.Equals(email)).FirstOrDefault();
-                user.Senha = Settings.HashPassword("senhamodificada");
+                var guid = Guid.NewGuid().ToString();
+                user.Senha = Settings.HashPassword(guid);
                 _context.SaveChanges();
-                return NoContent();
+                return Ok(guid);
             }
 
         }
