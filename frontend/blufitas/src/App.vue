@@ -25,6 +25,7 @@ export default {
     ...mapActions(["getEmpresasRepresentadas"])
   },
   created() {
+    window.document.title = "JFJ Representacoes";
     this.getEmpresasRepresentadas();
   }
 };

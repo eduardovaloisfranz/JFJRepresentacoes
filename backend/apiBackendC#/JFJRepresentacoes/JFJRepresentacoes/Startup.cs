@@ -26,7 +26,7 @@ namespace JFJRepresentacoes
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connection = Configuration["ConexaoMySql:FreeMySqlHosting"];
+            var connection = Configuration["ConexaoMySql:MySqlConnectionString"];
             services.AddDbContext<RepresentacaoContexto>(options =>
             {
                 options.UseMySql(connection);

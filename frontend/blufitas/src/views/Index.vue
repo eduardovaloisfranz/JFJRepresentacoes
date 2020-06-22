@@ -33,6 +33,10 @@
         </p>
       </b-col>
       <b-col cols="12" sm="12" md="12" lg="12">
+        <section v-if="mensagemBiblia">
+          <p class="text-info">Mensagem Biblia de hoje:</p>
+          {{mensagemBibliaFormatada}}
+        </section>
         <section class="d-flex justify-content-center">
           <div>
             <h3
@@ -66,6 +70,7 @@
 <script>
 import { mapState } from "vuex";
 import emailjs from "emailjs-com";
+import axios from "axios";
 
 export default {
   name: "Index",
@@ -73,7 +78,8 @@ export default {
     return {
       nome: "",
       email: "",
-      mensagem: ""
+      mensagem: "",
+      mensagemBiblia: null
     };
   },
   computed: {
@@ -86,6 +92,13 @@ export default {
         this.mensagem.length < 4
         ? true
         : false;
+    },
+    mensagemBibliaFormatada() {
+      if (this.mensagemBiblia !== null) {
+        return `${this.mensagemBiblia.book.name} ${this.mensagemBiblia.chapter}:${this.mensagemBiblia.number} ${this.mensagemBiblia.text}`;
+      } else {
+        return "";
+      }
     },
     ...mapState(["empresasRepresentadas"])
   },
@@ -125,7 +138,24 @@ export default {
     },
     limparCampos() {
       (this.nome = ""), (this.email = ""), (this.mensagem = "");
+    },
+    getMensagemBiblia() {
+      let config = {
+        headers: {
+          Authorization:
+            "Bearer " +
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ik1vbiBKdW4gMjIgMjAyMCAxNzo0ODo1NSBHTVQrMDAwMC5kdWR1ZnJhbnoxM0BnbWFpbC5jb20iLCJpYXQiOjE1OTI4NDgxMzV9.emZ0ijWak2gNwoMcOG0OIhN3YEF61wdEh15Rj6VCNug"
+        }
+      };
+      axios
+        .get("https://bibleapi.co/api/verses/nvi/random", config)
+        .then(res => {
+          this.mensagemBiblia = res.data;
+        });
     }
+  },
+  created() {
+    this.getMensagemBiblia();
   }
 };
 </script>
