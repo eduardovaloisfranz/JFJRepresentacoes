@@ -100,7 +100,7 @@ export default {
   },
   methods: {
     efetuarLogin() {
-      const URLTOFETCH = "https://localhost:44348/api/Representacao/login";
+      const URLTOFETCH = "http://localhost:50598/api/Representacao/login";
       axios
         .post(URLTOFETCH, this.user)
         .then(res => {
@@ -115,7 +115,7 @@ export default {
       this.modalRecuperacaoSenha = true;
     },
     handleRecoveryPassword() {
-      const URLTOFETCH = "https://localhost:44348/api/conta/recuperarSenha";
+      const URLTOFETCH = "http://localhost:50598/api/conta/recuperarSenha";
       let obj = { email: this.emailRecuperacaoSenha };
       axios
         .post(URLTOFETCH, obj)
@@ -130,7 +130,7 @@ export default {
         );
     },
     handleToken() {
-      const URLTOFETCH = "https://localhost:44348/api/conta/token";
+      const URLTOFETCH = "http://localhost:50598/api/conta/token";
       let obj = { token: this.tokenRecoveryPassword };
       let tokenDecoded = jwt(obj.token);
       if (

@@ -72,9 +72,9 @@ namespace JFJRepresentacoes
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseHttpsRedirection();
             app.UseRouting();
             app.UseSpaStaticFiles();
+            app.UseHttpsRedirection();
 
             app.UseCors(x =>
             {
